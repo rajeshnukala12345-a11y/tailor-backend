@@ -1,33 +1,32 @@
-// ✅ 1. TOP (dotenv first)
+// ✅ 1. Load env FIRST
 import dotenv from "dotenv";
 dotenv.config();
 
+// ✅ 2. Other imports
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+
+// ✅ 3. IMPORT ROUTES HERE (👉 this is where yours goes)
 import reservationRoutes from "./routes/reservationRoutes.js";
 
+// ✅ 4. Create app
 const app = express();
 
-// ✅ 2. MIDDLE (middleware)
-app.use(
-  cors({
-    origin: "http://localhost:5173",
-    credentials: true,
-  })
-);
-
+// ✅ 5. Middlewares
+app.use(cors());
 app.use(express.json());
 
-// ✅ 3. ROUTES
-app.use("/api/v1/reservation", reservationRoutes);
+// ✅ 6. USE ROUTES
+app.use("/api/reservations", reservationRoutes);
 
-// ✅ 4. 👉 ADD MONGODB CONNECTION HERE
+// ✅ 7. Connect DB
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected ✅"))
-  .catch(err => console.log("MongoDB error ❌", err.message));
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log("MongoDB error:", err));
 
-// ✅ 5. START SERVER (LAST)
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});    
+// ✅ 8. Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
